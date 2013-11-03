@@ -1,0 +1,34 @@
+<html>
+<head>
+</head>
+<body>
+		<div id="fb-root"></div>
+		<script>
+  window.fbAsyncInit = function() {
+    FB.init({appId: '200421383320285', status: true, cookie: true,
+             xfbml: true});
+  };
+  (function() {
+    var e = document.createElement('script'); e.async = true;
+    e.src = document.location.protocol +
+      '//connect.facebook.net/en_US/all.js';
+    document.getElementById('fb-root').appendChild(e);
+  }());
+</script>
+
+<h1>requests</h1>
+<button id="send-to-many">Send to Many</button>
+
+
+<script>
+document.getElementById('send-to-many').onclick = function() {
+  FB.ui({
+    method: 'apprequests',
+    message: 'Explore the business nearby! You should get this application.',
+  });
+}
+</script>
+
+
+</body>
+</html>
