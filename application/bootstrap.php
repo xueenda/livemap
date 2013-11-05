@@ -1,5 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 require_once 'config/config.php';
+
 //-- Environment setup --------------------------------------------------------
 
 /**
@@ -8,7 +9,7 @@ require_once 'config/config.php';
  * @see  http://docs.kohanaphp.com/features/localization#time
  * @see  http://php.net/timezones
  */
-date_default_timezone_set('America/Chicago');
+date_default_timezone_set('America/New_York');
 
 /**
  * Enable the Kohana auto-loader.
@@ -35,7 +36,13 @@ spl_autoload_register(array('Kohana', 'auto_load'));
  * - boolean  caching     enable or disable internal caching                 FALSE
  */
 Kohana::init(array(
-	'base_url' => '/'));
+	'base_url' => '/',
+	'index_file' => FALSE,
+	'charset'	 => 'utf-8',
+	'cache_dir'  => APPPATH.'cache',
+	'errors'	 => TRUE,
+	'profile'	 => TRUE,
+	'caching'	 => FALSE));
 
 /**
  * Attach the file write to logging. Multiple writers are supported.
@@ -64,6 +71,13 @@ Kohana::modules(array(
  * Set the routes. Each route must have a minimum of a name, a URI and a set of
  * defaults for the URI.
  */
+Route::set('api', '<api>(/<controller>(/<action>))',array(
+//'directory'=>'(v1)',
+	'api'=>'v([\d\.]{1})'))
+	->defaults(array(
+		'namespace' => 'api'
+	));;
+	
 Route::set('default', '(<controller>(/<action>(/<id>)))')
 	->defaults(array(
 		'controller' => 'livemap',

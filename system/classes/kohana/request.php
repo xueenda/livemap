@@ -494,6 +494,17 @@ class Kohana_Request {
 	 * @var  string  controller directory
 	 */
 	public $directory = '';
+	
+	/**
+	 * @var  string  controller namespace
+	 */
+	public $namespace = '';
+	
+	/**
+	 * @var  string  controller internal api_version
+	 */
+	public $api = '';
+	
 
 	/**
 	 * @var  string  controller to be executed
@@ -545,6 +556,15 @@ class Kohana_Request {
 					// Controllers are in a sub-directory
 					$this->directory = $params['directory'];
 				}
+				
+				if (isset($params['namespace']))
+				{
+					// Controllers are in a sub-directory
+					$this->namespace = $params['namespace'];
+					
+					if(isset($params['api']))
+						$this->namespace .= '_'.$params['api'];
+				}
 
 				// Store the controller
 				$this->controller = $params['controller'];
@@ -556,7 +576,7 @@ class Kohana_Request {
 				}
 
 				// These are accessible as public vars and can be overloaded
-				unset($params['controller'], $params['action'], $params['directory']);
+				unset($params['controller'], $params['action'], $params['directory'], $params['namespace']);
 
 				// Params cannot be changed once matched
 				$this->_params = $params;
@@ -806,9 +826,15 @@ class Kohana_Request {
 	 * @return  $this
 	 */
 	public function execute()
-	{
-		// Create the class prefix
-		$prefix = 'controller_';
+	{	
+		if ( ! empty($this->namespace))
+		{
+			// Add the directory name to the class prefix
+			$prefix = str_replace(array('\\', '/'), '_', trim($this->namespace, '/')).'\\';
+		}else{
+			// Create the class prefix
+			$prefix = 'controller_';
+		}
 
 		if ( ! empty($this->directory))
 		{
@@ -837,7 +863,8 @@ class Kohana_Request {
 			$controller = $class->newInstance($this);
 
 			// Execute the "before action" method
-			$class->getMethod('before')->invoke($controller);
+			if(method_exists($controller,'before'))
+				$class->getMethod('before')->invoke($controller);
 
 			// Determine the action to use
 			$action = empty($this->action) ? Route::$default_action : $this->action;
@@ -846,7 +873,8 @@ class Kohana_Request {
 			$class->getMethod('action_'.$action)->invokeArgs($controller, $this->_params);
 
 			// Execute the "after action" method
-			$class->getMethod('after')->invoke($controller);
+			if(method_exists($controller,'after'))
+				$class->getMethod('after')->invoke($controller);
 		}
 		catch (Exception $e)
 		{

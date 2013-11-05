@@ -10,11 +10,9 @@
 /**
  * Locale settings
  */
-date_default_timezone_set('America/New_York');
 
 mb_internal_encoding('UTF-8');
 
-//error_reporting(E_ERROR);
 
 $hostname = $_SERVER['SERVER_NAME'];
 

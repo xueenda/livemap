@@ -2,7 +2,7 @@
  
 require_once LIBPATH . "facebook/facebook.php";
 
-Class Controller_LiveMap extends Controller_DefaultTemplate
+Class Controller_LiveMap extends Controller_Base
 {
 	
     public function before()
@@ -72,6 +72,7 @@ Class Controller_LiveMap extends Controller_DefaultTemplate
 	    $fb_user = $facebook->getUser();
 	    $access_token = $facebook->getAccessToken();
       	PSAccess::set('access_token', $access_token);
+      	//echo $access_token;
 
 	    if (!empty($fb_user)) {
 	        try {
@@ -95,7 +96,7 @@ Class Controller_LiveMap extends Controller_DefaultTemplate
 
 	    }
 	    
-	     $this->template->header = View::factory('layout/header', $header);
+	    //$this->template->header = View::factory('layout/header', $header);
 
 	    //$this->template->navigation      = View::factory('pages/navigation', $navigation);
 	    $this->template->leftcolumn      = View::factory('leftcolumn', $leftcolumn);
